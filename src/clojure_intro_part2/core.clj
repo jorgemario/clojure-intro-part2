@@ -222,8 +222,13 @@
                  :address (:address order)
                  :rackids [(bake-cookies)]}))))
 
-(defn add-ingredients [a-list b-list]
-  (merge-with + a-list b-list))
+(defn add-ingredients [a b]
+  (merge-with + a b))
+
+(defn multiply-ingredients [shopping-list times]
+  (into {}
+        (for [[ingredient amount] shopping-list]
+          [ingredient (* times amount)])))
 
 (defn -main
   [& args]
