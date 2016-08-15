@@ -230,6 +230,11 @@
         (for [[ingredient amount] shopping-list]
           [ingredient (* times amount)])))
 
+(defn order->ingredients [order]
+  (add-ingredients
+   (multiply-ingredients {:egg 2 :flour 2 :milk 1 :sugar 1} (:cake (:items order) 0))
+   (multiply-ingredients {:egg 1 :flour 1 :sugar 1 :butter 1} (:cookies (:items order) 0))))
+
 (defn -main
   [& args]
   (bake-cake)
