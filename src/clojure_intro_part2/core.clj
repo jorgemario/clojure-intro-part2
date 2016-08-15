@@ -222,6 +222,8 @@
                  :address (:address order)
                  :rackids [(bake-cookies)]}))))
 
+(defn add-ingredients [a-list b-list]
+  (merge-with + a-list b-list))
 
 (defn -main
   [& args]
