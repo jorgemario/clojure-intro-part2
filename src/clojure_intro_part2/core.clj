@@ -32,23 +32,17 @@
   (grab :butter)
   (add-to-bowl))
 
+(def scooped-ingredients #{:milk :sugar :flour})
 (defn scooped? [ingredient]
-  (cond
-   (= ingredient :milk)
-   true
-   (= ingredient :flour)
-   true
-   (= ingredient :sugar)
-   true
-   :else
-   false))
+  (contains? scooped-ingredients ingredient))
 
+(def squeezed-ingredients #{:egg})
 (defn squeezed? [ingredient]
-  (= ingredient :egg))
+  (contains? squeezed-ingredients ingredient))
 
+(def simple-ingredients #{:butter})
 (defn simple? [ingredient]
-  (= ingredient :butter))
-
+  (contains? simple-ingredients ingredient))
 
 (defn add-eggs [n]
   (dotimes [e n]
@@ -146,16 +140,44 @@
   (cool-pan))
 
 (def pantry-ingredients #{:sugar :flour})
-
 (defn from-pantry? [ingredient]
   (contains? pantry-ingredients ingredient))
 
 (def fridge-ingredients #{:egg :milk :butter})
-
 (defn from-fridge? [ingredient]
   (contains? fridge-ingredients ingredient))
+
+(defn fetch-from-pantry
+  ([ingredient]
+   (fetch-from-pantry ingredient 1))
+  ([ingredient amount]
+   (if (from-pantry? ingredient)
+     (do
+       (go-to :pantry)
+       (dotimes [i amount]
+         (load-up ingredient))
+       (go-to :prep-area)
+       (dotimes [i amount]
+         (unload ingredient)))
+     (error ingredient " not in pantry area"))))
+
+(defn fetch-from-fridge
+  ([ingredient]
+   (fetch-from-fridge ingredient 1))
+  ([ingredient amount]
+   (if (from-fridge? ingredient)
+     (do
+       (go-to :fridge)
+       (dotimes [i amount]
+         (load-up ingredient))
+       (go-to :prep-area)
+       (dotimes [i amount]
+         (unload ingredient)))
+     (error ingredient " not in fridge area"))))
 
 (defn -main
   [& args]
   (bake-cake)
-  (bake-cookies))
+  (bake-cookies)
+  (fetch-from-pantry :flour 12)
+  (fetch-from-fridge :egg 45))
