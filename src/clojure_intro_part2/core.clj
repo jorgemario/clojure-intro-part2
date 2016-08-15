@@ -175,9 +175,24 @@
          (unload ingredient)))
      (error ingredient " not in fridge area"))))
 
+(defn fetch-ingredient
+  ([ingredient]
+   (fetch-ingredient ingredient 1))
+  ([ingredient amount]
+   (cond
+     (from-fridge? ingredient)
+     (fetch-from-fridge ingredient amount)
+     
+     (from-pantry? ingredient)
+     (fetch-from-pantry ingredient amount)
+
+     :else
+     (error "Unable to fetch ingredient" ingredient))))
+
 (defn -main
   [& args]
   (bake-cake)
   (bake-cookies)
   (fetch-from-pantry :flour 12)
-  (fetch-from-fridge :egg 45))
+  (fetch-from-fridge :egg 45)
+  (status))
