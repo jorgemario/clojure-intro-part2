@@ -208,6 +208,21 @@
   (doseq [[ingredient amount] shopping-list]
     (unload-amount ingredient amount)))
 
+(defn day-at-the-bakery []
+  (doseq [order (get-morning-orders)]
+    (dotimes [i (:cake (:items order) 0)]
+      (fetch-list {:egg 2 :flour 2 :milk 1 :sugar 1})
+      (delivery {:orderid (:orderid order)
+                 :address (:address order)
+                 :rackids [(bake-cake)]}))
+    
+    (dotimes [i (:cookies (:items order) 0)]
+      (fetch-list {:egg 1 :flour 1 :butter 1 :sugar 1})
+      (delivery {:orderid (:orderid order)
+                 :address (:address order)
+                 :rackids [(bake-cookies)]}))))
+
+
 (defn -main
   [& args]
   (bake-cake)
