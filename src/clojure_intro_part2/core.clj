@@ -145,6 +145,15 @@
   (bake-pan 30)
   (cool-pan))
 
+(def pantry-ingredients #{:sugar :flour})
+
+(defn from-pantry? [ingredient]
+  (contains? pantry-ingredients ingredient))
+
+(def fridge-ingredients #{:egg :milk :butter})
+
+(defn from-fridge? [ingredient]
+  (contains? fridge-ingredients ingredient))
 
 (defn -main
   [& args]
