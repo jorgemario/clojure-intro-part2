@@ -189,6 +189,25 @@
      :else
      (error "Unable to fetch ingredient" ingredient))))
 
+(defn load-up-amount [ingredient amount]
+  (dotimes [i amount]
+    (load-up ingredient)))
+
+(defn unload-amount [ingredient amount]
+  (dotimes [i amount]
+    (unload ingredient)))
+
+(defn fetch-list [shopping-list]
+  (doseq [[location ingredients] {:pantry pantry-ingredients
+                                 :fridge fridge-ingredients}]
+    (go-to location)
+    (doseq [ingredient ingredients]
+      (load-up-amount ingredient (ingredient shopping-list 0))))
+ 
+  (go-to :prep-area)
+  (doseq [[ingredient amount] shopping-list]
+    (unload-amount ingredient amount)))
+
 (defn -main
   [& args]
   (bake-cake)
