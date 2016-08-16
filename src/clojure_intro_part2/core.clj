@@ -235,6 +235,9 @@
    (multiply-ingredients {:egg 2 :flour 2 :milk 1 :sugar 1} (:cake (:items order) 0))
    (multiply-ingredients {:egg 1 :flour 1 :sugar 1 :butter 1} (:cookies (:items order) 0))))
 
+(defn orders->ingredients [orders]
+  (reduce add-ingredients (map order->ingredients orders)))
+
 (defn -main
   [& args]
   (bake-cake)
