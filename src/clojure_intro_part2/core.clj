@@ -208,21 +208,15 @@
   (doseq [[ingredient amount] shopping-list]
     (unload-amount ingredient amount)))
 
-(defn day-at-the-bakery []
-  (let [orders (get-morning-orders)
-        ingredient-list (orders->ingredients orders)]
-    
-    (fetch-list ingredient-list)
-    
-    (doseq [order orders]
-      (dotimes [i (:cake (:items order) 0)]
-        (delivery {:orderid (:orderid order)
-                   :address (:address order)
-                   :rackids [(bake-cake)]}))
-      (dotimes [i (:cookies (:items order) 0)]
-        (delivery {:orderid (:orderid order)
-                   :address (:address order)
-                   :rackids [(bake-cookies)]})))))
+(defn bake [item]
+  (println "bake" item)
+  (cond
+    (= :cake item)
+    (bake-cake)
+    (= :cookies item)
+    (bake-cookies)
+    :else
+    (error "Don't know how to bake" item)))
 
 (defn add-ingredients [a b]
   (merge-with + a b))
@@ -240,10 +234,24 @@
 (defn orders->ingredients [orders]
   (reduce add-ingredients (map order->ingredients orders)))
 
+(defn day-at-the-bakery []
+  (let [orders (get-morning-orders)
+        ingredient-list (orders->ingredients orders)]
+    
+    (fetch-list ingredient-list)
+    
+    (doseq [order orders]
+      (let [items (:items order)
+            racks (for [[item amount] items
+                        i (range amount)]
+                    (do
+                      (println item i)
+                      (bake item)))
+            receipt {:orderid (:orderid order)
+                     :address (:address order)
+                     :rackids racks}]
+        (delivery receipt)))))
+
 (defn -main
   [& args]
-  (bake-cake)
-  (bake-cookies)
-  (fetch-from-pantry :flour 12)
-  (fetch-from-fridge :egg 45)
-  (status))
+  (day-at-the-bakery))
